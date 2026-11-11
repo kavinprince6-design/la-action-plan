@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>อัปเดตแผนแก้ไข LA · ห้องปฏิบัติการ</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root {
+  --bg: #eef2f1; --surface: #ffffff; --surface-2: #f6f8f7; --ink: #14232b; --muted: #5b6b72; --line: #dbe2e0;
+  --head: #10282d; --head-ink: #e8f0ee; --head-muted: #9fb5b3; --accent: #0b6e69; --accent-soft: #dcefec;
+  --done: #1f8a4c; --done-bg: #dff3e6; --doing: #b7791f; --doing-bg: #fbefd9; --todo: #7d8b90; --todo-bg: #eceff0; --late: #c0392b; --late-bg: #fbe4e1;
+  --font: 'IBM Plex Sans Thai', 'Noto Sans Thai', Tahoma, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #0f1719; --surface: #172225; --surface-2: #1c292c; --ink: #e3ecea; --muted: #9bb0ad; --line: #2a3a3d;
+  --head: #0a1416; --head-ink: #e3ecea; --head-muted: #7f9895; --accent: #4fb7ae; --accent-soft: #173a38;
+  --done: #4cc27e; --done-bg: #173525; --doing: #e0a94b; --doing-bg: #3a2d14; --todo: #93a3a7; --todo-bg: #243134; --late: #ef7b6c; --late-bg: #3d1e1a;
+  color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+header { background: var(--head); color: var(--head-ink); }
+header .wrap { display: flex; gap: 14px; align-items: center; padding-block: 14px 0; flex-wrap: wrap; }
+.logo { width: 44px; height: 44px; background: #fff; border-radius: 10px; padding: 3px; flex: none; }
+.logo img { width: 100%; height: 100%; object-fit: contain; }
+.ttl { flex: 1; min-width: 0; }
+.ttl b { display: block; font-size: 18px; font-weight: 600; }
+.ttl small { color: var(--head-muted); font-size: 13px; }
+.hlinks { display: flex; gap: 6px; }
+.hlinks a, .hlinks button { color: var(--head-muted); background: none; border: 0; text-decoration: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.hlinks a:hover, .hlinks button:hover { color: var(--head-ink); background: rgba(255,255,255,.08); }
+nav { width: 100%; display: flex; gap: 4px; margin-top: 10px; overflow-x: auto; }
+nav button { background: none; border: 0; color: var(--head-muted); padding: 9px 14px; border-radius: 8px 8px 0 0; cursor: pointer; white-space: nowrap; font-weight: 500; }
+nav button.on { background: var(--bg); color: var(--ink); }
+main { padding-block: 20px 80px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.pad { padding: 18px 20px; }
+h2 { font-size: 17px; margin: 0 0 6px; }
+.sub { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; white-space: nowrap; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.small { padding: 3px 10px; font-size: 13px; }
+.btn.danger { color: var(--late); }
+.btn:disabled { opacity: .5; cursor: default; }
+input[type=text], input[type=password], input[type=date], input[type=search], select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: var(--surface); }
+textarea { resize: vertical; min-height: 64px; }
+label.f { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin: 10px 0 4px; }
+.code { font-family: var(--mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+.mt { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line); padding: 0 6px; border-radius: 5px; white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 1px 10px; border-radius: 99px; white-space: nowrap; }
+.pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.s-done { color: var(--done); background: var(--done-bg); } .s-doing { color: var(--doing); background: var(--doing-bg); } .s-todo { color: var(--todo); background: var(--todo-bg); } .s-late { color: var(--late); background: var(--late-bg); }
+
+.login { max-width: 400px; margin: 40px auto; }
+.err { color: var(--late); font-size: 14px; min-height: 1.4em; margin-top: 8px; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.filters select { width: auto; max-width: 100%; }
+.filters input { flex: 1; min-width: 180px; width: auto; }
+.it { margin-top: 10px; }
+.it > .h { display: grid; grid-template-columns: 74px 1fr auto auto; gap: 12px; align-items: center; padding: 12px 16px; cursor: pointer; }
+.it > .h .t { min-width: 0; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.it > .h .n { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+.it .b { display: none; border-top: 1px solid var(--line); padding: 14px 16px 18px; }
+.it.open .b { display: block; }
+.rec { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 14px; margin: 0 0 6px; }
+.row3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
+.steps { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.step { display: grid; grid-template-columns: 30px 1fr 150px 34px; gap: 8px; align-items: start; padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
+.step.ok { background: var(--done-bg); border-color: transparent; }
+.step input[type=checkbox] { width: 22px; height: 22px; margin: 6px 0 0 2px; accent-color: var(--done); cursor: pointer; }
+.step textarea { min-height: 38px; }
+.step .dd { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+.acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+.acts .msg { font-size: 13px; color: var(--muted); }
+.chk { display: inline-flex; gap: 8px; align-items: center; margin-top: 10px; font-size: 14px; cursor: pointer; }
+.roles { width: 100%; border-collapse: collapse; }
+.roles td, .roles th { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; font-size: 14px; }
+.roles th { color: var(--muted); font-size: 13px; }
+.roles td.c { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.log div { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 18px; border-radius: 8px; font-size: 14px; z-index: 50; }
+.toast.err { background: var(--late); color: #fff; }
+.confirm { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; }
+@media (max-width: 720px) {
+  .row3 { grid-template-columns: 1fr; }
+  .it > .h { grid-template-columns: 60px 1fr; }
+  .it > .h .pill, .it > .h .n { grid-column: 2; justify-self: start; }
+  .step { grid-template-columns: 30px 1fr 34px; }
+  .step .dd { grid-column: 2; }
+  .ttl small { display: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo"><img src="/icons/hospital-logo.png" alt="ตราโรงพยาบาลห้วยแถลง"></div>
+    <div class="ttl"><b>อัปเดตแผนแก้ไขโอกาสพัฒนา</b><small>สำหรับห้องปฏิบัติการ · ศูนย์คุณภาพดูได้ที่หน้าแรก</small></div>
+    <div class="hlinks"><a href="/" target="_blank" rel="noopener">ดูหน้าเว็บสาธารณะ ↗</a><button id="logout" hidden>ออกจากระบบ</button></div>
+    <nav id="tabs" hidden>
+      <button data-tab="items" class="on">อัปเดตรายข้อ</button>
+      <button data-tab="roles">ทำเนียบผู้รับผิดชอบ</button>
+      <button data-tab="settings">ตั้งค่า / ประวัติ</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="main"><p class="sub">กำลังโหลด…</p></main>
+
+<script>
+const STATUS = { done: 'แก้ไขแล้ว', doing: 'กำลังดำเนินการ', todo: 'ยังไม่เริ่ม', late: 'เลยกำหนด' };
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const today = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
+const day = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const th = (s) => (s ? day(s).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '');
+const eff = (i) => (i.status !== 'done' && day(i.due) < today ? 'late' : i.status);
+const main = document.getElementById('main');
+let D = null, tab = 'items', openId = null;
+const F = { sec: '', st: '', q: '' };
+
+function toast(m, err) { const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = m; document.body.appendChild(t); setTimeout(() => t.remove(), err ? 4000 : 2000); }
+async function api(path, method = 'GET', body) {
+  const r = await fetch(path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { if (r.status === 401 && D) { D.admin = false; render(); } throw new Error(d.error || 'เกิดข้อผิดพลาด'); }
+  return d;
+}
+async function load() { D = await api('/api/plan'); render(); }
+
+function render() {
+  document.getElementById('tabs').hidden = !D.admin;
+  document.getElementById('logout').hidden = !D.admin;
+  if (!D.admin) return loginView();
+  document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+  ({ items: itemsView, roles: rolesView, settings: settingsView })[tab]();
+}
+
+function loginView() {
+  main.innerHTML = `<form class="card pad login" id="lf">
+    <h2>เข้าสู่ระบบผู้ดูแล</h2><p class="sub">สำหรับทีมห้องปฏิบัติการที่อัปเดตความคืบหน้า</p>
+    <label class="f" for="pw">รหัสผ่าน</label><input type="password" id="pw" autocomplete="current-password" required>
+    <button class="btn primary" style="width:100%;margin-top:14px" id="go">เข้าสู่ระบบ</button><div class="err" id="err"></div></form>`;
+  document.getElementById('lf').onsubmit = async (e) => {
+    e.preventDefault(); const go = document.getElementById('go'); go.disabled = true;
+    try { await api('/api/login', 'POST', { password: document.getElementById('pw').value }); await load(); }
+    catch (ex) { document.getElementById('err').textContent = ex.message; go.disabled = false; }
+  };
+}
+
+/* ---------- items ---------- */
+function itemCard(i) {
+  const e = eff(i), n = i.steps.filter((s) => s.done).length;
+  return `<div class="card it ${openId === i.id ? 'open' : ''}" id="it-${i.id}">
+    <div class="h" data-open="${i.id}"><span class="code">OFI-${i.id}</span>
+      <span class="t">${i.mt ? `<span class="mt">MT ${esc(i.mt)}</span> ` : ''}${esc(i.text)}</span>
+      <span class="pill s-${e}">${STATUS[e]}</span><span class="n">${n}/${i.steps.length} · ${th(i.due)}</span></div>
+    <div class="b">${openId === i.id ? editor(i) : ''}</div></div>`;
+}
+function editor(i) {
+  const roleList = Object.keys(roleMap());
+  return `<form data-form="${i.id}">
+    <p class="rec"><b>ข้อเสนอแนะ:</b> ${esc(i.text)}</p>
+    <div class="row3">
+      <div><label class="f">ผู้รับผิดชอบ (หลายคนคั่นด้วย " / ")</label><input type="text" name="owner" list="roles-dl" value="${esc(i.owner)}">
+        <datalist id="roles-dl">${roleList.map((r) => `<option value="${esc(r)}">`).join('')}</datalist></div>
+      <div><label class="f">วันเริ่ม</label><input type="date" name="start" value="${esc(i.start)}"></div>
+      <div><label class="f">กำหนดเสร็จ</label><input type="date" name="due" value="${esc(i.due)}"></div>
+    </div>
+    <label class="chk"><input type="checkbox" name="started" ${i.started ? 'checked' : ''}> เริ่มดำเนินการแล้ว (แม้ยังไม่มีขั้นตอนที่เสร็จ)</label>
+    <label class="f" style="margin-top:14px">ขั้นตอนดำเนินการ — ติ๊กเมื่อทำเสร็จ</label>
+    <div class="steps">${i.steps.map((s, k) => stepRow(s, k)).join('')}</div>
+    <button type="button" class="btn small" data-add style="margin-top:8px">+ เพิ่มขั้นตอน</button>
+    <label class="f">หมายเหตุ (แสดงในหน้าสาธารณะ)</label><textarea name="note" placeholder="เช่น รอบริษัทนัดเปลี่ยน HEPA filter วันที่ 25 พ.ย.">${esc(i.note || '')}</textarea>
+    <div class="acts"><button class="btn primary" type="submit">บันทึก</button><button class="btn" type="button" data-close>ปิด</button>
+      <span style="flex:1"></span><span class="confirm" data-reset-wrap><button class="btn small danger" type="button" data-reset>คืนค่าแผนตั้งต้น</button></span></div>
+  </form>`;
+}
+function stepRow(s, k) {
+  return `<div class="step ${s.done ? 'ok' : ''}" data-step="${k}">
+    <input type="checkbox" ${s.done ? 'checked' : ''} aria-label="ขั้นตอนที่ ${k + 1} เสร็จแล้ว">
+    <textarea rows="2" aria-label="รายละเอียดขั้นตอน">${esc(s.t)}</textarea>
+    <div class="dd"><span>กำหนด</span><input type="date" value="${esc(s.due)}" aria-label="กำหนดเสร็จขั้นตอน">${s.done && s.doneAt ? `<span>เสร็จ ${th(s.doneAt)}</span>` : ''}</div>
+    <button type="button" class="btn small danger" data-del title="ลบขั้นตอน">×</button></div>`;
+}
+function readSteps(form) {
+  return [...form.querySelectorAll('[data-step]')].map((el) => ({ done: el.querySelector('input[type=checkbox]').checked, t: el.querySelector('textarea').value, due: el.querySelector('input[type=date]').value }));
+}
+function itemsView() {
+  const list = D.items.filter((i) => (!F.sec || i.sec === F.sec) && (!F.st || eff(i) === F.st) && (!F.q || (`OFI-${i.id} ${i.text} ${i.owner}`).toLowerCase().includes(F.q.toLowerCase())));
+  main.innerHTML = `<div class="filters">
+      <select id="f-sec"><option value="">ทุกหมวด</option>${D.sections.filter((s) => s.n).map((s) => `<option value="${esc(s.no)}" ${F.sec === s.no ? 'selected' : ''}>${esc(s.no)} ${esc(s.title)}</option>`).join('')}</select>
+      <select id="f-st"><option value="">ทุกสถานะ</option>${Object.entries(STATUS).map(([k, l]) => `<option value="${k}" ${F.st === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      <input type="search" id="f-q" placeholder="ค้นหา OFI-09, BSC, ชื่อผู้รับผิดชอบ" value="${esc(F.q)}"></div>
+    <p class="sub">${list.length} ข้อ · คลิกที่ข้อเพื่อติ๊กขั้นตอนที่เสร็จ แก้ผู้รับผิดชอบ หรือเลื่อนวันกำหนด แล้วกด "บันทึก"</p>
+    ${list.map(itemCard).join('')}`;
+  document.getElementById('f-sec').onchange = (e) => { F.sec = e.target.value; itemsView(); };
+  document.getElementById('f-st').onchange = (e) => { F.st = e.target.value; itemsView(); };
+  const q = document.getElementById('f-q');
+  q.oninput = () => { F.q = q.value.trim(); const p = q.selectionStart; itemsView(); const n = document.getElementById('f-q'); n.focus(); n.setSelectionRange(p, p); };
+  bindItems();
+}
+function bindItems() {
+  main.querySelectorAll('[data-open]').forEach((h) => (h.onclick = () => { openId = openId === h.dataset.open ? null : h.dataset.open; itemsView(); if (openId) document.getElementById('it-' + openId).scrollIntoView({ block: 'nearest' }); }));
+  const form = main.querySelector('[data-form]');
+  if (!form) return;
+  const id = form.dataset.form;
+  const stepsBox = form.querySelector('.steps');
+  stepsBox.addEventListener('change', (e) => { if (e.target.type === 'checkbox') e.target.closest('.step').classList.toggle('ok', e.target.checked); });
+  stepsBox.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-del]')) return;
+    if (stepsBox.children.length <= 1) return toast('ต้องมีอย่างน้อย 1 ขั้นตอน', true);
+    e.target.closest('.step').remove();
+  });
+  form.querySelector('[data-add]').onclick = () => {
+    const k = stepsBox.children.length;
+    stepsBox.insertAdjacentHTML('beforeend', stepRow({ t: '', due: form.due.value, done: false }, k));
+    stepsBox.lastElementChild.querySelector('textarea').focus();
+  };
+  form.querySelector('[data-close]').onclick = () => { openId = null; itemsView(); };
+  const wrap = form.querySelector('[data-reset-wrap]');
+  form.querySelector('[data-reset]').onclick = () => {
+    wrap.innerHTML = `คืนค่าข้อนี้เป็นแผนตั้งต้น? <button type="button" class="btn small danger" data-yes>ยืนยัน</button><button type="button" class="btn small" data-no>ยกเลิก</button>`;
+    wrap.querySelector('[data-no]').onclick = () => itemsView();
+    wrap.querySelector('[data-yes]').onclick = async () => {
+      try { const d = await api('/api/item', 'DELETE', { id }); replace(d.item); toast('คืนค่าแล้ว'); } catch (ex) { toast(ex.message, true); }
+    };
+  };
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const body = { id, owner: form.owner.value, start: form.start.value, due: form.due.value, started: form.started.checked, note: form.note.value, steps: readSteps(form) };
+    try { const d = await api('/api/item', 'POST', body); replace(d.item); D.updatedAt = d.updatedAt; toast('บันทึกแล้ว · หน้าสาธารณะอัปเดตแล้ว'); } catch (ex) { toast(ex.message, true); }
+  };
+}
+function replace(item) { D.items = D.items.map((i) => (i.id === item.id ? item : i)); itemsView(); }
+
+/* ---------- roles ---------- */
+function roleMap() {
+  const m = {};
+  D.items.forEach((i) => i.owner.split(' / ').map((x) => x.trim()).filter(Boolean).forEach((r) => (m[r] ||= []).push('OFI-' + i.id)));
+  return m;
+}
+function rolesView() {
+  const m = roleMap();
+  main.innerHTML = `<div class="card pad"><h2>ทำเนียบผู้รับผิดชอบ</h2>
+    <p class="sub">ใส่ชื่อจริงของผู้รับผิดชอบแต่ละตำแหน่ง หน้าสาธารณะจะแสดงเป็น "ชื่อ (ตำแหน่ง)" ทุกข้อพร้อมกัน · เว้นว่างได้</p>
+    <div style="overflow-x:auto"><table class="roles"><thead><tr><th>ตำแหน่ง / บทบาท</th><th style="width:34%">ชื่อ-นามสกุล</th><th>หัวข้อที่รับผิดชอบ</th></tr></thead>
+    <tbody>${Object.entries(m).sort((a, b) => b[1].length - a[1].length).map(([r, ids]) => `<tr><td>${esc(r)}</td><td><input type="text" data-role="${esc(r)}" value="${esc(D.roles[r] || '')}" placeholder="ชื่อ-นามสกุล"></td><td class="c">${ids.length} ข้อ: ${ids.join(', ')}</td></tr>`).join('')}</tbody></table></div>
+    <div class="acts"><button class="btn primary" id="saveRoles">บันทึกทำเนียบ</button></div></div>`;
+  document.getElementById('saveRoles').onclick = async () => {
+    const roles = {}; main.querySelectorAll('[data-role]').forEach((inp) => { if (inp.value.trim()) roles[inp.dataset.role] = inp.value.trim(); });
+    try { const d = await api('/api/roles', 'POST', { roles }); D.roles = d.roles; toast('บันทึกทำเนียบแล้ว'); } catch (ex) { toast(ex.message, true); }
+  };
+}
+
+/* ---------- settings ---------- */
+function settingsView() {
+  const s = D.settings || {};
+  main.innerHTML = `<div class="card pad"><h2>วันสำคัญ</h2><p class="sub">ใช้คำนวณการนับถอยหลังในหน้าสาธารณะ</p>
+    <div class="row3">
+      <div><label class="f">วันที่ได้รับรายงาน</label><input type="date" id="s-rec" value="${esc(s.received || '2026-10-24')}"></div>
+      <div><label class="f">ส่งหลักฐานตามแผน</label><input type="date" id="s-sub" value="${esc(s.submit || '2026-12-21')}"></div>
+      <div><label class="f">ครบกำหนดตามสภาฯ</label><input type="date" id="s-dead" value="${esc(s.deadline || '2026-12-23')}"></div></div>
+    <div class="acts"><button class="btn primary" id="saveSet">บันทึก</button></div></div>
+    <div class="card pad" style="margin-top:14px"><h2>ประวัติการแก้ไขล่าสุด</h2>
+    <div class="log">${(D.log || []).map((l) => `<div><span style="color:var(--muted)">${new Date(l.at).toLocaleString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span> · ${esc(l.text)}</div>`).join('') || '<p class="sub">ยังไม่มี</p>'}</div></div>`;
+  document.getElementById('saveSet').onclick = async () => {
+    try { const d = await api('/api/roles', 'POST', { settings: { received: document.getElementById('s-rec').value, submit: document.getElementById('s-sub').value, deadline: document.getElementById('s-dead').value } }); D.settings = d.settings; toast('บันทึกแล้ว'); } catch (ex) { toast(ex.message, true); }
+  };
+}
+
+document.querySelectorAll('#tabs button').forEach((b) => (b.onclick = async () => { tab = b.dataset.tab; if (tab === 'settings') { try { D = await api('/api/plan'); } catch (e) {} } render(); }));
+document.getElementById('logout').onclick = async () => { await api('/api/login', 'DELETE'); await load(); };
+load().catch((e) => { main.innerHTML = `<div class="card pad"><h2>โหลดข้อมูลไม่สำเร็จ</h2><p class="sub">${esc(e.message)}</p></div>`; });
+</script>
+</body>
+</html>

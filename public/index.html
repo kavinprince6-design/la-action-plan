@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ติดตามแผนแก้ไข LA ห้วยแถลง</title>
+<meta name="description" content="ติดตามความคืบหน้าแผนแก้ไขโอกาสพัฒนาจากการตรวจประเมินโดยสภาเทคนิคการแพทย์ งานเทคนิคการแพทย์ โรงพยาบาลห้วยแถลง">
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#10282d">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: เฮดเดอร์แถบเข้ม + แท็บ 4 มุมมอง (ภาพรวม / แผนปฏิบัติการ / ผู้รับผิดชอบ / ไทม์ไลน์) บนพื้นเทาอมเขียว */
+:root {
+  --bg: #eef2f1; --surface: #ffffff; --surface-2: #f6f8f7; --ink: #14232b; --muted: #5b6b72; --faint: #8a979c;
+  --line: #dbe2e0; --head: #10282d; --head-ink: #e8f0ee; --head-muted: #9fb5b3;
+  --accent: #0b6e69; --accent-soft: #dcefec; --amber: #b7791f;
+  --done: #1f8a4c; --done-bg: #dff3e6; --doing: #b7791f; --doing-bg: #fbefd9;
+  --todo: #7d8b90; --todo-bg: #eceff0; --late: #c0392b; --late-bg: #fbe4e1;
+  --font: 'IBM Plex Sans Thai', 'Noto Sans Thai', Tahoma, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1719; --surface: #172225; --surface-2: #1c292c; --ink: #e3ecea; --muted: #9bb0ad; --faint: #6f8582;
+  --line: #2a3a3d; --head: #0a1416; --head-ink: #e3ecea; --head-muted: #7f9895;
+  --accent: #4fb7ae; --accent-soft: #173a38; --amber: #e0a94b;
+  --done: #4cc27e; --done-bg: #173525; --doing: #e0a94b; --doing-bg: #3a2d14; --todo: #93a3a7; --todo-bg: #243134; --late: #ef7b6c; --late-bg: #3d1e1a;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1719; --surface: #172225; --surface-2: #1c292c; --ink: #e3ecea; --muted: #9bb0ad; --faint: #6f8582;
+  --line: #2a3a3d; --head: #0a1416; --head-ink: #e3ecea; --head-muted: #7f9895;
+  --accent: #4fb7ae; --accent-soft: #173a38; --amber: #e0a94b;
+  --done: #4cc27e; --done-bg: #173525; --doing: #e0a94b; --doing-bg: #3a2d14; --todo: #93a3a7; --todo-bg: #243134; --late: #ef7b6c; --late-bg: #3d1e1a;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* header */
+header { background: var(--head); color: var(--head-ink); }
+header .wrap { display: flex; gap: 16px; align-items: center; padding-block: 18px 0; flex-wrap: wrap; }
+.logo { width: 54px; height: 54px; background: #fff; border-radius: 12px; padding: 4px; flex: none; }
+.logo img { width: 100%; height: 100%; object-fit: contain; }
+.ttl { min-width: 0; flex: 1; }
+.ttl small { color: var(--head-muted); font-size: 13px; display: block; }
+.ttl h1 { margin: 0; font-size: 22px; line-height: 1.35; font-weight: 600; text-wrap: balance; }
+.stamp { text-align: right; font-size: 13px; color: var(--head-muted); }
+.stamp b { color: var(--head-ink); font-weight: 500; }
+.sample { display: inline-block; margin-top: 4px; background: var(--amber); color: #1b1305; font-weight: 600; font-size: 12px; padding: 1px 9px; border-radius: 99px; }
+nav { width: 100%; display: flex; gap: 4px; margin-top: 14px; overflow-x: auto; }
+nav a { color: var(--head-muted); text-decoration: none; padding: 10px 14px; border-radius: 8px 8px 0 0; white-space: nowrap; font-weight: 500; }
+nav a:hover { color: var(--head-ink); }
+nav a.on { background: var(--bg); color: var(--ink); }
+
+main { padding-block: 22px 60px; }
+.view[hidden] { display: none; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+h2 { font-size: 17px; margin: 0 0 12px; font-weight: 600; }
+.sub { color: var(--muted); font-size: 13.5px; margin: -8px 0 14px; }
+
+/* KPI */
+.kpis { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 12px; }
+.kpi { padding: 16px 18px; display: flex; flex-direction: column; gap: 2px; }
+.kpi .v { font-family: var(--mono); font-size: 30px; font-weight: 600; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 13.5px; color: var(--muted); }
+.kpi.done .v { color: var(--done); } .kpi.doing .v { color: var(--doing); } .kpi.todo .v { color: var(--todo); } .kpi.late .v { color: var(--late); }
+.kpi.main { flex-direction: row; align-items: center; gap: 18px; }
+.ring { width: 92px; height: 92px; flex: none; }
+.ring text { font-family: var(--mono); font-weight: 600; fill: var(--ink); }
+.stack { height: 12px; border-radius: 99px; overflow: hidden; display: flex; background: var(--todo-bg); margin-top: 14px; }
+.stack span { height: 100%; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 8px; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.pad { padding: 18px 20px; }
+.deadline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.dl { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; }
+.dl.key { border-color: var(--accent); }
+.dl .d { font-weight: 600; } .dl .n { font-family: var(--mono); font-size: 24px; font-weight: 600; line-height: 1.2; }
+.dl small { color: var(--muted); font-size: 12.5px; display: block; }
+
+.hbar { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 64px; gap: 10px; align-items: center; padding: 6px 0; font-size: 14px; }
+.hbar .lab { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar .lab .num { color: var(--muted); margin-right: 6px; }
+.track { height: 10px; border-radius: 99px; background: var(--todo-bg); overflow: hidden; display: flex; }
+.track span { height: 100%; }
+.hbar .pct { text-align: right; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.hbar.link { cursor: pointer; border-radius: 6px; }
+.hbar.link:hover .lab { color: var(--accent); }
+
+.watch { display: flex; flex-direction: column; }
+.wrow { display: grid; grid-template-columns: 70px 1fr auto; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); align-items: baseline; font-size: 14px; cursor: pointer; }
+.wrow:first-child { border-top: 0; }
+.wrow:hover .t { color: var(--accent); }
+.wrow .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wrow .who { display: block; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.code { font-family: var(--mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 1px 10px; border-radius: 99px; white-space: nowrap; }
+.pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.s-done { color: var(--done); background: var(--done-bg); } .s-doing { color: var(--doing); background: var(--doing-bg); }
+.s-todo { color: var(--todo); background: var(--todo-bg); } .s-late { color: var(--late); background: var(--late-bg); }
+.mt { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); padding: 0 6px; border-radius: 5px; white-space: nowrap; }
+
+/* plan */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.filters select, .filters input { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; min-width: 0; }
+.filters input { flex: 1; min-width: 180px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--line); background: var(--surface); padding: 4px 12px; border-radius: 99px; font-size: 13px; cursor: pointer; }
+.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.count { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+.secgrp { margin-top: 18px; }
+.secgrp > h3 { font-size: 14.5px; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+.secgrp > h3 .num { color: var(--accent); margin-right: 6px; }
+.ofi { border-top: 1px solid var(--line); }
+.ofi:first-child { border-top: 0; }
+.ofi > button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 70px 1fr 190px 110px 120px 20px; gap: 12px; align-items: center; padding: 12px 16px; }
+.ofi > button:hover { background: var(--surface-2); }
+.ofi > button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.ofi .txt { min-width: 0; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ofi .own { font-size: 13px; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.ofi .due { font-size: 13px; white-space: nowrap; }
+.ofi .due small { display: block; color: var(--muted); font-size: 12px; }
+.prog { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.segs { display: flex; gap: 3px; }
+.segs i { width: 18px; height: 6px; border-radius: 3px; background: var(--todo-bg); }
+.segs i.on { background: var(--done); }
+.chev { color: var(--faint); transition: transform .15s; }
+.ofi.open .chev { transform: rotate(90deg); }
+.detail { padding: 4px 16px 18px 98px; display: none; }
+.ofi.open .detail { display: block; }
+.detail .rec { font-size: 14.5px; margin: 0 0 12px; padding: 10px 14px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--line); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.steps li { display: grid; grid-template-columns: 26px 1fr 96px; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; align-items: start; }
+.steps li:last-child { border-bottom: 0; }
+.chk { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-size: 12px; color: transparent; margin-top: 2px; }
+.steps li.ok .chk { background: var(--done); border-color: var(--done); color: #fff; }
+.steps li.ok .st { color: var(--muted); }
+.steps .sd { font-size: 12.5px; color: var(--muted); text-align: right; white-space: nowrap; }
+.meta { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.meta b { color: var(--ink); font-weight: 500; }
+
+/* owners */
+.otable { width: 100%; border-collapse: collapse; font-size: 14px; }
+.otable th, .otable td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.otable th { font-size: 12.5px; color: var(--muted); font-weight: 600; background: var(--surface-2); }
+.otable td.n { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.otable th.n { text-align: right; }
+.otable tr.click { cursor: pointer; } .otable tr.click:hover td { background: var(--surface-2); }
+.otable .codes { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.scroll { overflow-x: auto; }
+
+/* timeline */
+.gantt { min-width: 860px; font-size: 13px; }
+.g-head, .g-row { display: grid; grid-template-columns: 250px 1fr; }
+.g-head { position: sticky; top: 0; background: var(--surface); z-index: 2; border-bottom: 1px solid var(--line); }
+.g-weeks { position: relative; height: 34px; }
+.g-weeks span { position: absolute; top: 8px; font-size: 12px; color: var(--muted); padding-left: 4px; border-left: 1px solid var(--line); height: 26px; }
+.g-sec { grid-column: 1 / -1; padding: 10px 12px 4px; font-weight: 600; color: var(--muted); font-size: 13px; }
+.g-row { border-bottom: 1px solid var(--line); }
+.g-row .g-l { padding: 6px 12px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.g-row .g-l:hover { color: var(--accent); }
+.g-lane { position: relative; height: 32px; }
+.g-grid { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line); opacity: .7; }
+.g-bar { position: absolute; top: 9px; height: 14px; border-radius: 4px; }
+.g-bar.done { background: var(--done); } .g-bar.doing { background: var(--doing); } .g-bar.todo { background: var(--todo); opacity: .55; } .g-bar.late { background: var(--late); }
+.g-mark { position: absolute; top: 0; bottom: 0; width: 2px; z-index: 1; }
+.g-mark.today { background: var(--accent); }
+.g-mark.submit { background: var(--late); opacity: .7; }
+.g-flag { position: absolute; top: -2px; font-size: 11px; font-weight: 600; transform: translateX(4px); white-space: nowrap; }
+
+.note { font-size: 13px; color: var(--muted); margin-top: 22px; }
+
+@media (max-width: 960px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .kpi.main { grid-column: 1 / -1; }
+  .grid2 { grid-template-columns: 1fr; }
+  .ofi > button { grid-template-columns: 60px 1fr auto; }
+  .ofi .own, .ofi .due, .ofi .chev { display: none; }
+  .ofi .prog { grid-column: 2 / -1; flex-direction: row; align-items: center; gap: 8px; }
+  .detail { padding-left: 16px; }
+  .stamp { text-align: left; width: 100%; }
+}
+@media (max-width: 560px) {
+  .deadline { grid-template-columns: 1fr; }
+  .hbar { grid-template-columns: 1fr 52px; }
+  .hbar .track { grid-column: 1 / -1; grid-row: 2; }
+  .ttl h1 { font-size: 19px; }
+  .steps li { grid-template-columns: 26px 1fr; }
+  .steps .sd { grid-column: 2; text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><img src="/icons/hospital-logo.png" alt="ตราโรงพยาบาลห้วยแถลง"></div>
+    <div class="ttl">
+      <small>งานเทคนิคการแพทย์ โรงพยาบาลห้วยแถลง · ตรวจประเมินโดยสภาเทคนิคการแพทย์ 15 ต.ค. 2569</small>
+      <h1>ติดตามแผนแก้ไขโอกาสพัฒนา (Action Plan)</h1>
+    </div>
+    <div class="stamp">อัปเดตล่าสุด <b id="asof">—</b><br><span id="today"></span></div>
+    <nav id="tabs">
+      <a href="#overview" data-v="overview">ภาพรวม</a>
+      <a href="#plan" data-v="plan">แผนปฏิบัติการรายข้อ</a>
+      <a href="#owners" data-v="owners">ผู้รับผิดชอบ</a>
+      <a href="#timeline" data-v="timeline">ไทม์ไลน์</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="v-overview"></section>
+  <section class="view" id="v-plan" hidden></section>
+  <section class="view" id="v-owners" hidden></section>
+  <section class="view" id="v-timeline" hidden></section>
+  <p class="note">หน้านี้เปิดดูได้ทุกคน (อ่านอย่างเดียว) · ห้องปฏิบัติการเป็นผู้ปรับสถานะแต่ละขั้นตอน · ข้อเสนอแนะจากรายงาน F14 ลงวันที่ 24 ตุลาคม 2569 · <a href="/admin" style="color:var(--muted)">สำหรับห้องปฏิบัติการ</a></p>
+</main>
+
+<script>
+let DATA, ITEMS = [], SECTIONS = [], ROLES = {};
+let SUBMIT = '2026-12-21', DEADLINE = '2026-12-23', RECEIVED = '2026-10-24';
+const STATUS = { done: 'แก้ไขแล้ว', doing: 'กำลังดำเนินการ', todo: 'ยังไม่เริ่ม', late: 'เลยกำหนด' };
+const PHASE = { 1: 'ระยะ 1 · เอกสาร/แก้ไขเร็ว', 2: 'ระยะ 2 · ระบบงาน/แบบบันทึก', 3: 'ระยะ 3 · ใช้เวลา/หน่วยงานภายนอก' };
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const day = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const today = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
+const diff = (s) => Math.round((day(s) - today) / 86400000);
+const th = (s, long) => day(s).toLocaleDateString('th-TH', long ? { day: 'numeric', month: 'long', year: 'numeric' } : { day: 'numeric', month: 'short' });
+const ownerName = (r) => (ROLES[r] ? `${ROLES[r]} (${r})` : r);
+const owners = (i) => i.owner.split(' / ').map((x) => ownerName(x.trim()));
+const ownerText = (i) => owners(i).join(' / ');
+const eff = (i) => (i.status !== 'done' && diff(i.due) < 0 ? 'late' : i.status);
+const pctSteps = (i) => i.steps.filter((s) => s.done).length / i.steps.length;
+const pill = (s) => `<span class="pill s-${s}">${STATUS[s]}</span>`;
+const segs = (i) => `<span class="segs">${i.steps.map((s) => `<i class="${s.done ? 'on' : ''}"></i>`).join('')}</span>`;
+const COLORS = { done: 'var(--done)', doing: 'var(--doing)', late: 'var(--late)', todo: 'var(--todo-bg)' };
+
+document.getElementById('today').textContent = 'วันนี้ ' + today.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function tally(list) {
+  const c = { all: list.length, done: 0, doing: 0, todo: 0, late: 0 };
+  list.forEach((i) => c[eff(i)]++);
+  c.pct = list.length ? c.done / list.length : 0;
+  return c;
+}
+function stackBar(c, cls = 'track') {
+  const w = (n) => (c.all ? (n / c.all) * 100 : 0) + '%';
+  return `<div class="${cls}"><span style="width:${w(c.done)};background:var(--done)"></span><span style="width:${w(c.doing)};background:var(--doing)"></span><span style="width:${w(c.late)};background:var(--late)"></span></div>`;
+}
+
+/* ---------- overview ---------- */
+function overview() {
+  const c = tally(ITEMS);
+  const p = Math.round(c.pct * 100);
+  const circ = 2 * Math.PI * 38;
+  const watch = ITEMS.filter((i) => eff(i) !== 'done' && diff(i.due) <= 7).sort((a, b) => a.due.localeCompare(b.due));
+  const dSubmit = diff(SUBMIT), dDead = diff(DEADLINE), dRec = -diff(RECEIVED);
+  const secRows = SECTIONS.filter((s) => s.n).map((s) => {
+    const sc = tally(ITEMS.filter((i) => i.sec === s.no));
+    return `<div class="hbar link" data-sec="${esc(s.no)}" title="${esc(s.title)}"><span class="lab"><span class="num">${esc(s.no)}</span>${esc(s.title)}</span>${stackBar(sc)}<span class="pct">${sc.done}/${sc.all}</span></div>`;
+  }).join('');
+  const phRows = [1, 2, 3].map((ph) => {
+    const list = ITEMS.filter((i) => i.phase === ph); const pc = tally(list);
+    const ends = list.map((i) => i.due).sort().pop();
+    return `<div class="hbar"><span class="lab">${PHASE[ph]}<span class="num" style="margin-left:6px">· ถึง ${th(ends)}</span></span>${stackBar(pc)}<span class="pct">${pc.done}/${pc.all}</span></div>`;
+  }).join('');
+  document.getElementById('v-overview').innerHTML = `
+    <div class="kpis">
+      <div class="card kpi main">
+        <svg class="ring" viewBox="0 0 92 92" role="img" aria-label="แก้ไขแล้ว ${p}%">
+          <circle cx="46" cy="46" r="38" fill="none" stroke="var(--todo-bg)" stroke-width="10"/>
+          <circle cx="46" cy="46" r="38" fill="none" stroke="var(--done)" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - c.pct)}" transform="rotate(-90 46 46)"/>
+          <text x="46" y="52" text-anchor="middle" font-size="19">${p}%</text>
+        </svg>
+        <div><div class="l">ความคืบหน้าทั้งหมด</div><div class="v">${c.done}<span style="font-size:18px;color:var(--muted)"> / ${c.all} ข้อ</span></div><div class="l">แก้ไขเสร็จพร้อมหลักฐาน</div></div>
+      </div>
+      <div class="card kpi done"><span class="v">${c.done}</span><span class="l">แก้ไขแล้ว</span></div>
+      <div class="card kpi doing"><span class="v">${c.doing}</span><span class="l">กำลังดำเนินการ</span></div>
+      <div class="card kpi todo"><span class="v">${c.todo}</span><span class="l">ยังไม่เริ่ม</span></div>
+      <div class="card kpi late"><span class="v">${c.late}</span><span class="l">เลยกำหนด</span></div>
+    </div>
+    <div class="card pad" style="margin-top:12px">
+      <div class="deadline">
+        <div class="dl"><small>ได้รับรายงาน F14</small><div class="d">${th(RECEIVED, true)}</div><small>ผ่านมา <span class="num">${dRec}</span> วัน</small></div>
+        <div class="dl key"><small>ส่งหลักฐานตามแผน</small><div class="d">${th(SUBMIT, true)}</div><div class="n">${dSubmit >= 0 ? dSubmit : 0}<span style="font-size:13px;color:var(--muted);font-family:var(--font)"> วัน</span></div></div>
+        <div class="dl"><small>ครบกำหนด 60 วันตามสภาฯ</small><div class="d">${th(DEADLINE, true)}</div><small>เหลือ <span class="num">${Math.max(dDead, 0)}</span> วัน</small></div>
+      </div>
+      ${stackBar(c, 'stack')}
+      <div class="legend"><span><i class="dot" style="background:var(--done)"></i>แก้ไขแล้ว</span><span><i class="dot" style="background:var(--doing)"></i>กำลังดำเนินการ</span><span><i class="dot" style="background:var(--late)"></i>เลยกำหนด</span><span><i class="dot" style="background:var(--todo-bg);outline:1px solid var(--line)"></i>ยังไม่เริ่ม</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card pad"><h2>ต้องติดตามภายใน 7 วัน</h2><p class="sub">ข้อที่ครบกำหนดใน 7 วันข้างหน้า หรือเลยกำหนดแล้ว</p>
+        <div class="watch">${watch.length ? watch.map((i) => `<div class="wrow" data-open="${i.id}"><span class="code">OFI-${i.id}</span><span class="t">${esc(i.text)}<span class="who">${esc(ownerText(i))}</span></span><span>${eff(i) === 'late' ? pill('late') : `<span class="num" style="font-size:13px">${th(i.due)}</span>`}</span></div>`).join('') : '<p class="sub" style="margin:0">ไม่มีข้อที่ใกล้ครบกำหนด</p>'}</div>
+      </div>
+      <div class="card pad"><h2>ความคืบหน้าตามระยะ</h2><p class="sub">แผนแบ่ง 3 ระยะ ส่งหลักฐานรวม ${th(SUBMIT, true)}</p>${phRows}
+        <h2 style="margin-top:22px">ความคืบหน้าตามหมวด</h2><p class="sub">คลิกหมวดเพื่อดูแผนรายข้อ</p>${secRows}</div>
+    </div>`;
+}
+
+/* ---------- plan ---------- */
+const F = { sec: '', owner: '', st: 'all', q: '' };
+let openId = null;
+function planRow(i) {
+  const e = eff(i), done = i.steps.filter((s) => s.done).length;
+  return `<div class="ofi ${openId === i.id ? 'open' : ''}" id="ofi-${i.id}">
+    <button type="button" data-toggle="${i.id}" aria-expanded="${openId === i.id}">
+      <span class="code">OFI-${i.id}</span>
+      <span class="txt">${i.mt ? `<span class="mt">MT ${esc(i.mt)}</span> ` : '<span class="mt">ข้อเสนอแนะ</span> '}${esc(i.text)}</span>
+      <span class="own">${esc(ownerText(i))}</span>
+      <span class="due"><span class="num">${th(i.due)}</span><small>${e === 'done' ? 'เสร็จแล้ว' : diff(i.due) >= 0 ? 'อีก ' + diff(i.due) + ' วัน' : 'เลย ' + -diff(i.due) + ' วัน'}</small></span>
+      <span class="prog">${pill(e)}${segs(i)}<span class="num" style="font-size:12px;color:var(--muted)">${done}/${i.steps.length} ขั้นตอน</span></span>
+      <span class="chev" aria-hidden="true">›</span>
+    </button>
+    <div class="detail">
+      <p class="rec"><b>ข้อเสนอแนะจากผู้ตรวจประเมิน:</b> ${esc(i.text)}</p>
+      <ol class="steps">${i.steps.map((s) => `<li class="${s.done ? 'ok' : ''}"><span class="chk">✓</span><span class="st">${esc(s.t)}</span><span class="sd">${s.done ? '✓ เสร็จ ' + (s.doneAt ? th(s.doneAt) : '') : 'กำหนด ' + th(s.due)}</span></li>`).join('')}</ol>
+      ${i.note ? `<p class="rec" style="margin-top:12px"><b>หมายเหตุ:</b> ${esc(i.note)}</p>` : ''}
+      <div class="meta"><span>ผู้รับผิดชอบ: <b>${esc(ownerText(i))}</b></span><span>ช่วงดำเนินการ: <b>${th(i.start)} – ${th(i.due)}</b></span><span>${PHASE[i.phase]}</span></div>
+    </div></div>`;
+}
+function plan() {
+  const allOwners = [...new Set(ITEMS.flatMap(owners))].sort((a, b) => a.localeCompare(b, 'th'));
+  const list = ITEMS.filter((i) => (!F.sec || i.sec === F.sec) && (!F.owner || owners(i).includes(F.owner)) && (F.st === 'all' || eff(i) === F.st)
+    && (!F.q || (i.id + ' OFI-' + i.id + ' ' + i.text + ' ' + ownerText(i) + ' ' + i.mt + ' ' + i.steps.map((s) => s.t).join(' ')).toLowerCase().includes(F.q.toLowerCase())));
+  const groups = SECTIONS.map((s) => ({ s, items: list.filter((i) => i.sec === s.no) })).filter((g) => g.items.length);
+  const chips = [['all', 'ทั้งหมด'], ['late', STATUS.late], ['doing', STATUS.doing], ['todo', STATUS.todo], ['done', STATUS.done]];
+  const v = document.getElementById('v-plan');
+  v.innerHTML = `
+    <div class="filters">
+      <select id="f-sec" aria-label="หมวด"><option value="">ทุกหมวด</option>${SECTIONS.filter((s) => s.n).map((s) => `<option value="${esc(s.no)}" ${F.sec === s.no ? 'selected' : ''}>${esc(s.no)} ${esc(s.title)}</option>`).join('')}</select>
+      <select id="f-owner" aria-label="ผู้รับผิดชอบ"><option value="">ผู้รับผิดชอบทุกคน</option>${allOwners.map((o) => `<option ${F.owner === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>
+      <input id="f-q" type="search" placeholder="ค้นหา เช่น BSC, ค่าอ้างอิง, OFI-36" value="${esc(F.q)}">
+    </div>
+    <div class="chips">${chips.map(([k, l]) => `<button type="button" class="chip ${F.st === k ? 'on' : ''}" data-st="${k}">${l} <span class="num">${k === 'all' ? ITEMS.length : ITEMS.filter((i) => eff(i) === k).length}</span></button>`).join('')}</div>
+    <p class="count" style="margin-top:12px">แสดง ${list.length} จาก ${ITEMS.length} ข้อ · คลิกแต่ละข้อเพื่อดูขั้นตอนดำเนินการ</p>
+    ${groups.map((g) => `<div class="secgrp"><h3><span class="num">${esc(g.s.no)}</span>${esc(g.s.title)}</h3><div class="card">${g.items.map(planRow).join('')}</div></div>`).join('') || '<p class="sub">ไม่พบข้อที่ตรงกับตัวกรอง</p>'}`;
+  v.querySelector('#f-sec').onchange = (e) => { F.sec = e.target.value; plan(); };
+  v.querySelector('#f-owner').onchange = (e) => { F.owner = e.target.value; plan(); };
+  const q = v.querySelector('#f-q');
+  q.oninput = () => { F.q = q.value.trim(); const pos = q.selectionStart; plan(); const n = document.getElementById('f-q'); n.focus(); n.setSelectionRange(pos, pos); };
+  v.querySelectorAll('[data-st]').forEach((b) => (b.onclick = () => { F.st = b.dataset.st; plan(); }));
+  v.querySelectorAll('[data-toggle]').forEach((b) => (b.onclick = () => {
+    const id = b.dataset.toggle; openId = openId === id ? null : id;
+    v.querySelectorAll('.ofi').forEach((o) => { const on = o.id === 'ofi-' + openId; o.classList.toggle('open', on); o.querySelector('button').setAttribute('aria-expanded', on); });
+  }));
+}
+
+/* ---------- owners ---------- */
+function ownersView() {
+  const map = {};
+  ITEMS.forEach((i) => owners(i).forEach((o) => (map[o] ||= []).push(i)));
+  const rows = Object.entries(map).map(([o, list]) => ({ o, list, c: tally(list) })).sort((a, b) => b.c.all - a.c.all || a.o.localeCompare(b.o, 'th'));
+  document.getElementById('v-owners').innerHTML = `
+    <h2>ผู้รับผิดชอบแต่ละหัวข้อ</h2><p class="sub">ข้อที่มีผู้รับผิดชอบร่วม นับให้ทุกคน · คลิกชื่อเพื่อดูแผนรายข้อของผู้รับผิดชอบนั้น</p>
+    <div class="card scroll"><table class="otable">
+      <thead><tr><th>ผู้รับผิดชอบ</th><th class="n">ทั้งหมด</th><th class="n">แก้ไขแล้ว</th><th class="n">กำลังทำ</th><th class="n">ยังไม่เริ่ม</th><th class="n">เลยกำหนด</th><th style="width:22%">ความคืบหน้า</th><th>หัวข้อ</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr class="click" data-owner="${esc(r.o)}"><td><b style="font-weight:500">${esc(r.o)}</b></td><td class="n">${r.c.all}</td><td class="n" style="color:var(--done)">${r.c.done}</td><td class="n" style="color:var(--doing)">${r.c.doing}</td><td class="n">${r.c.todo}</td><td class="n" style="color:${r.c.late ? 'var(--late)' : 'inherit'}">${r.c.late}</td><td>${stackBar(r.c)}</td><td class="codes">${r.list.map((i) => 'OFI-' + i.id).join(', ')}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+  document.querySelectorAll('[data-owner]').forEach((tr) => (tr.onclick = () => { Object.assign(F, { owner: tr.dataset.owner, sec: '', st: 'all', q: '' }); location.hash = 'plan'; }));
+}
+
+/* ---------- timeline ---------- */
+function timeline() {
+  const t0 = day('2026-11-02'), t1 = day('2026-12-28'), span = t1 - t0;
+  const x = (d) => (((typeof d === 'string' ? day(d) : d) - t0) / span) * 100;
+  const weeks = []; for (let d = new Date(t0); d < t1; d.setDate(d.getDate() + 7)) weeks.push(new Date(d));
+  const grid = weeks.map((w) => `<span class="g-grid" style="left:${x(w)}%"></span>`).join('');
+  const marks = (today >= t0 && today <= t1 ? `<span class="g-mark today" style="left:${x(today)}%"></span>` : '') + `<span class="g-mark submit" style="left:${x(SUBMIT)}%"></span>`;
+  let rows = '';
+  SECTIONS.filter((s) => s.n).forEach((s) => {
+    rows += `<div class="g-sec">${esc(s.no)} ${esc(s.title)}</div>`;
+    ITEMS.filter((i) => i.sec === s.no).forEach((i) => {
+      const e = eff(i), l = x(i.start), w = Math.max(x(day(i.due).getTime() + 86400000) - l, 1);
+      rows += `<div class="g-row"><div class="g-l" data-open="${i.id}" title="${esc(i.text)}"><span class="code">OFI-${i.id}</span> ${esc(i.text)}</div>
+        <div class="g-lane">${grid}${marks}<span class="g-bar ${e}" style="left:${l}%;width:${w}%" title="${th(i.start)} – ${th(i.due)} · ${STATUS[e]}"></span></div></div>`;
+    });
+  });
+  document.getElementById('v-timeline').innerHTML = `
+    <h2>ไทม์ไลน์รายสัปดาห์</h2><p class="sub">แท่งสีแสดงช่วงดำเนินการของแต่ละข้อ · เส้นเขียวเข้ม = วันนี้ · เส้นแดง = วันส่งหลักฐาน ${th(SUBMIT, true)}</p>
+    <div class="legend" style="margin:-4px 0 12px"><span><i class="dot" style="background:var(--done)"></i>แก้ไขแล้ว</span><span><i class="dot" style="background:var(--doing)"></i>กำลังดำเนินการ</span><span><i class="dot" style="background:var(--late)"></i>เลยกำหนด</span><span><i class="dot" style="background:var(--todo);opacity:.55"></i>ยังไม่เริ่ม</span></div>
+    <div class="card scroll"><div class="gantt">
+      <div class="g-head"><div style="padding:8px 12px;font-weight:600;color:var(--muted)">หัวข้อ</div><div class="g-weeks">${weeks.map((w) => `<span style="left:${x(w)}%">${w.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })}</span>`).join('')}</div></div>
+      ${rows}
+    </div></div>`;
+}
+
+/* ---------- routing ---------- */
+const VIEWS = { overview, plan, owners: ownersView, timeline };
+function route() {
+  const v = VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : 'overview';
+  document.querySelectorAll('.view').forEach((s) => (s.hidden = s.id !== 'v-' + v));
+  document.querySelectorAll('#tabs a').forEach((a) => a.classList.toggle('on', a.dataset.v === v));
+  VIEWS[v]();
+}
+document.addEventListener('click', (e) => {
+  const sec = e.target.closest('[data-sec]');
+  if (sec) { Object.assign(F, { sec: sec.dataset.sec, owner: '', st: 'all', q: '' }); location.hash = 'plan'; return; }
+  const op = e.target.closest('[data-open]');
+  if (op) {
+    Object.assign(F, { sec: '', owner: '', st: 'all', q: '' }); openId = op.dataset.open;
+    if (location.hash !== '#plan') location.hash = 'plan'; else plan();
+    setTimeout(() => document.getElementById('ofi-' + openId)?.scrollIntoView({ block: 'center' }), 50);
+  }
+});
+window.addEventListener('hashchange', route);
+async function load() {
+  try {
+    const r = await fetch('/api/plan', { cache: 'no-store' });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'โหลดข้อมูลไม่สำเร็จ');
+    DATA = await r.json();
+    ITEMS = DATA.items; SECTIONS = DATA.sections; ROLES = DATA.roles || {};
+    const s = DATA.settings || {};
+    SUBMIT = s.submit || SUBMIT; DEADLINE = s.deadline || DEADLINE; RECEIVED = s.received || RECEIVED;
+    document.getElementById('asof').textContent = DATA.updatedAt ? new Date(DATA.updatedAt).toLocaleString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.' : 'ยังไม่มีการอัปเดต';
+    route();
+  } catch (e) {
+    document.getElementById('v-overview').innerHTML = `<div class="card pad"><h2>โหลดข้อมูลไม่สำเร็จ</h2><p class="sub" style="margin:0">${esc(e.message)}</p></div>`;
+  }
+}
+load();
+setInterval(() => { if (document.visibilityState === 'visible' && !document.querySelector('.ofi.open')) load(); }, 120000);
+</script>
+</body>
+</html>
